@@ -31,7 +31,6 @@ public class LoginController {
 			
 			session.setAttribute("userinfo", info);
 			session.setAttribute("json", json);
-			System.out.println("zzzzz");
 			return "redirect:admin/index.jsp";
 		}else {
 			return "redirect:index.jsp";
