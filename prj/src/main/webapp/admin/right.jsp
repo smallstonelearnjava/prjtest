@@ -7,10 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<FORM METHOD=POST ACTION="login">
-用户名	<INPUT TYPE="text" NAME="uname"><br>
-密码		<INPUT TYPE="text" NAME="upass"><br>
-<INPUT TYPE="submit">
-</FORM>
+It's Welcome.
 </body>
 </html>

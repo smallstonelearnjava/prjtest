@@ -10,8 +10,17 @@ public class Tree {
     private Integer tid;
     private String name;
     private Boolean open=true;
+    private String file;
+    
+    public String getFile() {
+		return url;
+	}
 
-    public String getName() {
+	public void setFile(String file) {
+		this.file = file;
+	}
+
+	public String getName() {
 		return treename;
 	}
 
@@ -116,7 +125,7 @@ public class Tree {
      * @mbggenerated Mon Apr 15 15:29:27 CST 2019
      */
     public String getUrl() {
-        return url;
+        return null;
     }
 
     /**

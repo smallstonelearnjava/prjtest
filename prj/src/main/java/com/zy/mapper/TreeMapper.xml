@@ -23,6 +23,11 @@
   	)
   </select>
   
+  <select id="findTreeByRid" resultMap="BaseResultMap" parameterType="int">
+  	select * from tree where tid in
+  	(select tid from roletree where rid=#{rid})
+  </select>
+  
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated

@@ -10,21 +10,53 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <HEAD>
 	<TITLE> ZTREE DEMO - Custom Icon </TITLE>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="<%=basePath%>css/demo.css" type="text/css">
 	<link rel="stylesheet" href="<%=basePath%>css/zTreeStyle/zTreeStyle.css" type="text/css">
 	<script type="text/javascript" src="<%=basePath%>js/jquery-1.4.4.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>js/jquery.ztree.core-3.5.js"></script>
-	<!--  <script type="text/javascript" src="../../../js/jquery.ztree.excheck-3.5.js"></script>
-	  <script type="text/javascript" src="../../../js/jquery.ztree.exedit-3.5.js"></script>-->
+<style>
+	body {
+	background-color: white;
+	margin:0; padding:0;
+	text-align: center;
+	}
+	div, p, table, th, td {
+		list-style:none;
+		margin:0; padding:0;
+		color:#333; font-size:12px;
+		font-family:dotum, Verdana, Arial, Helvetica, AppleGothic, sans-serif;
+	}
+	#testIframe {margin-left: 10px;}
+  </style>	
 	<SCRIPT type="text/javascript">
 		<!--
+		var zTree;
+		var demoIframe;
+
 		var setting = {
+			view: {
+				dblClickExpand: false,
+				showLine: true,
+				selectedMulti: false
+			},
 			data: {
 				simpleData: {
-					enable: true,
+					enable:true,
 					idKey: "tid",
 					pIdKey: "pid",
 					rootPId: ""
+				}
+			},
+			callback: {
+				beforeClick: function(treeId, treeNode) {
+					var zTree = $.fn.zTree.getZTreeObj("tree");
+					if (treeNode.isParent) {
+						zTree.expandNode(treeNode);
+						return false;
+					} else {
+						//alert(1);
+						demoIframe.attr("src",treeNode.file);
+						return true;
+					}
 				}
 			}
 		};
@@ -32,39 +64,35 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		var zNodes =${json};
 
 		$(document).ready(function(){
-			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			var t = $("#tree");
+			t = $.fn.zTree.init(t, setting, zNodes);
+			demoIframe = $("#testIframe");
+			demoIframe.bind("load", loadReady);
+			var zTree = $.fn.zTree.getZTreeObj("tree");
+			zTree.selectNode(zTree.getNodeByParam("id", 101));
+
 		});
+
+		function loadReady() {
+			var bodyH = demoIframe.contents().find("body").get(0).scrollHeight,
+			htmlH = demoIframe.contents().find("html").get(0).scrollHeight,
+			maxH = Math.max(bodyH, htmlH), minH = Math.min(bodyH, htmlH),
+			h = demoIframe.height() >= maxH ? minH:maxH ;
+			if (h < 530) h = 530;
+			demoIframe.height(h);
+		}
 		//-->
 	</SCRIPT>
 </HEAD>
 
 <BODY>
-<h1>自定义图标 -- icon 属性</h1>
-<h6>[ 文件路径: core/custom_icon.html ]</h6>
-<div class="content_wrap">
-	<div class="zTreeDemoBackground left">
-		<ul id="treeDemo" class="ztree"></ul>
-	</div>
-	<div class="right">
-		<ul class="info">
-			<li class="title"><h2>1、setting 配置信息说明</h2>
-				<ul class="list">
-				<li>自定义图标不需要对 setting 进行特殊配置</li>
-				</ul>
-			</li>
-			<li class="title"><h2>2、treeNode 节点数据说明</h2>
-				<ul class="list">
-				<li>利用 节点数据的 icon / iconOpen / iconClose 属性实现自定义图标</li>
-				<li class="highlight_red">详细请参见 API 文档中的相关内容</li>
-				</ul>
-			</li>
-			<li class="title"><h2>3、其他说明</h2>
-				<ul class="list">
-				<li class="highlight_red">由于时间关系，例子直接采用 png 图片，如果需要解决 ie6 下 png 图片的透明问题，请针对 ie6 制作特殊的 gif 图片或者利用 css filter 解决</li>
-				</ul>
-			</li>
-		</ul>
-	</div>
-</div>
+<TABLE border=0 height=100% align=left>
+	<TR>
+		<TD width=20% align=left valign=top style="BORDER-RIGHT: #999999 1px dashed">
+			<ul id="tree" class="ztree" style="width:260px; overflow:auto;"></ul>
+		</TD>
+		<TD width=70% align=left valign=top><IFRAME ID="testIframe" Name="testIframe" FRAMEBORDER=0 SCROLLING=AUTO width=100%  height=600px SRC="right.jsp"></IFRAME></TD>
+	</TR>
+</TABLE>
 </BODY>
 </HTML>

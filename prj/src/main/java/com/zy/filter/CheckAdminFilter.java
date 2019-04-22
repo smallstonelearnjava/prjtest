@@ -1,6 +1,7 @@
 package com.zy.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -11,6 +12,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.util.JavaScriptUtils;
 
 import com.zy.entity.Userinfo;
 
@@ -30,7 +32,12 @@ public class CheckAdminFilter implements Filter{
 		
 		Userinfo info = (Userinfo) servletRequest.getSession().getAttribute("userinfo");
 		if(info==null) {
-			servletResponse.sendRedirect(basePath+"index.jsp");
+			//servletResponse.sendRedirect(basePath+"index.jsp");
+			PrintWriter out = response.getWriter();
+			out.print("<script language=\"JavaScript\">");
+			out.print("parent.window.location=\""+basePath+"index.jsp\";");
+			out.print("</script>");
+			
 		}else {
 			chain.doFilter(request, response);
 		}
